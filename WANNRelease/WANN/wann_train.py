@@ -54,7 +54,7 @@ def gatherData(data,wann,gen,hyp,savePop=False):
     data - (DataGatherer) - updated run data
   """
   data.gatherData(wann.pop, wann.species)
-  if (gen%hyp['save_mod']) is 0:
+  if (gen%hyp['save_mod']) == 0:
     #data = checkBest(data, bestReps=16)
     data = checkBest(data)
     data.save(gen)
@@ -231,6 +231,7 @@ def mpi_fork(n):
     )
     print( ["mpirun", "-np", str(n), sys.executable] + sys.argv)
     subprocess.check_call(["mpirun", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
+    # subprocess.check_call(["C:\Program Files\Microsoft MPI\Bin\mpiexec", "-np", str(n), sys.executable] +['-u']+ sys.argv, env=env)
     return "parent"
   else:
     global nWorker, rank
