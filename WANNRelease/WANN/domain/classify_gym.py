@@ -100,13 +100,21 @@ def mnist_256():
   ''' 
   Converts 28x28 mnist digits to [16x16] 
   [samples x pixels]  ([N X 256])
-  '''  
+  '''
   import mnist
   z = (mnist.train_images()/255)
   z = preprocess(z,(16,16))
 
   z = z.reshape(-1, (256))
   return z, mnist.train_labels()
+
+def cifar10():
+  from tensorflow.keras.datasets.cifar10 import load_data
+  (x_train, y_train), (x_test, y_test) = load_data
+  x_train = x_train.reshape(-1, (32*32*3))
+  # TODO divide by 255 or 256?
+  # TODO fix dimensions
+  return x_train, y_train
 
 
 def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
