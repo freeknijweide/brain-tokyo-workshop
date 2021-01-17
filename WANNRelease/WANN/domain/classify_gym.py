@@ -6,7 +6,7 @@ from gym import spaces
 from gym.utils import seeding
 import numpy as np
 import sys
-import cv2
+# import cv2
 import math
 
 class ClassifyEnv(gym.Env):
@@ -110,35 +110,35 @@ def mnist_256():
 
 def cifar10():
   from tensorflow.keras.datasets.cifar10 import load_data
-  (x_train, y_train), (x_test, y_test) = load_data
+  (x_train, y_train), (x_test, y_test) = load_data()
   x_train = x_train.reshape(-1, (32*32*3))
   # TODO divide by 255 or 256?
   # TODO fix dimensions
   return x_train, y_train
 
 
-def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
-  """
-  Resizes, crops, and unskewes images
-
-  """
-  if patchDim == None: patchDim = size
-  nImg = np.shape(img)[0]
-  procImg  = np.empty((nImg,size[0],size[1]))
-
-  # Unskew and Resize
-  if unskew == True:    
-    for i in range(nImg):
-      procImg[i,:,:] = deskew(cv2.resize(img[i,:,:],size),size)
-
-  # Crop
-  cropImg  = np.empty((nImg,patchDim[0],patchDim[1]))
-  for i in range(nImg):
-    cropImg[i,:,:] = procImg[i,patchCorner[0]:patchCorner[0]+patchDim[0],\
-                               patchCorner[1]:patchCorner[1]+patchDim[1]]
-  procImg = cropImg
-
-  return procImg
+# def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
+#   """
+#   Resizes, crops, and unskewes images
+#
+#   """
+#   if patchDim == None: patchDim = size
+#   nImg = np.shape(img)[0]
+#   procImg  = np.empty((nImg,size[0],size[1]))
+#
+#   # Unskew and Resize
+#   if unskew == True:
+#     for i in range(nImg):
+#       procImg[i,:,:] = deskew(cv2.resize(img[i,:,:],size),size)
+#
+#   # Crop
+#   cropImg  = np.empty((nImg,patchDim[0],patchDim[1]))
+#   for i in range(nImg):
+#     cropImg[i,:,:] = procImg[i,patchCorner[0]:patchCorner[0]+patchDim[0],\
+#                                patchCorner[1]:patchCorner[1]+patchDim[1]]
+#   procImg = cropImg
+#
+#   return procImg
 
 def deskew(image, image_shape, negated=True):
   """
