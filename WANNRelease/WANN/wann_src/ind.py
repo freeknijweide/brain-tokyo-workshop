@@ -1,6 +1,6 @@
 import numpy as np
 import copy
-
+from scipy.special import softmax
 
 # -- Individual Class ---------------------------------------------------- -- #
 
@@ -323,28 +323,6 @@ def selectAct(action, actSelect):
   else:
     action = action.flatten()
   return action
-
-def softmax(x):
-  """Compute softmax values for each sets of scores in x.
-  Assumes: [samples x dims]
-
-  Args:
-    x - (np_array) - unnormalized values
-        [samples x dims]
-
-  Returns:
-    softmax - (np_array) - softmax normalized in dim 1
-  
-  Todo: Untangle all the transposes...    
-  """  
-  if x.ndim == 1:
-    e_x = np.exp(x - np.max(x))
-    return e_x / e_x.sum(axis=0)
-  else:
-    e_x = np.exp(x.T - np.max(x,axis=1))
-    return (e_x / e_x.sum(axis=0)).T
-
-
 
 # -- File I/O ------------------------------------------------------------ -- #
 """ Networks are exported as [N x (N+1] matrices, where the first NxN portion
