@@ -13,7 +13,7 @@ class ClassifyEnv(gym.Env):
 
   def __init__(self, trainSet, target):
     """
-    Data set is a tuple of 
+    Data set is a tuple of
     [0] input data: [nSamples x nInputs]
     [1] labels:     [nSamples x 1]
 
@@ -44,25 +44,24 @@ class ClassifyEnv(gym.Env):
     ''' Randomly select from training set'''
     self.np_random, seed = seeding.np_random(seed)
     return [seed]
-  
+
   def reset(self):
-    ''' Initialize State'''    
+    ''' Initialize State'''
     #print('Lucky number', np.random.randint(10)) # same randomness?
     self.trainOrder = np.random.permutation(len(self.target))
     self.t = 0 # timestep
     self.currIndx = self.trainOrder[self.t:self.t+self.batch]
     self.state = self.trainSet[self.currIndx,:]
     return self.state
-  
+
   def step(self, action):
-    ''' 
+    '''
     Judge Classification, increment to next batch
     action - [batch x output] - softmax output
     '''
     y = self.target[self.currIndx]
     m = y.shape[0]
-
-    log_likelihood = -np.log(action[range(m),y])
+    log_likelihood = -np.log(np.nextafter(action[range(m),y],1))
     loss = np.sum(log_likelihood) / m
     reward = -loss
 
@@ -86,10 +85,10 @@ class ClassifyEnv(gym.Env):
 # -- Data Sets ----------------------------------------------------------- -- #
 
 def digit_raw():
-  ''' 
-  Converts 8x8 scikit digits to 
+  '''
+  Converts 8x8 scikit digits to
   [samples x pixels]  ([N X 64])
-  '''  
+  '''
   from sklearn import datasets
   digits = datasets.load_digits()
   z = (digits.images/16)
@@ -97,8 +96,8 @@ def digit_raw():
   return z, digits.target
 
 def mnist_256():
-  ''' 
-  Converts 28x28 mnist digits to [16x16] 
+  '''
+  Converts 28x28 mnist digits to [16x16]
   [samples x pixels]  ([N X 256])
   '''
   import mnist
@@ -151,7 +150,7 @@ def deskew(image, image_shape, negated=True):
 
   source: https://github.com/vsvinayak/mnist-helper
   """
-  
+
   # negate the image
   if not negated:
       image = 255-image
@@ -163,9 +162,9 @@ def deskew(image, image_shape, negated=True):
   skew = m['mu11']/m['mu02']
   M = np.float32([[1, skew, -0.5*image_shape[0]*skew], [0,1,0]])
   img = cv2.warpAffine(image, M, image_shape, \
-    flags=cv2.WARP_INVERSE_MAP|cv2.INTER_LINEAR)  
+    flags=cv2.WARP_INVERSE_MAP|cv2.INTER_LINEAR)
   return img
 
 
 
- 
+
