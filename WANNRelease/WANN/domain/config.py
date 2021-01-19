@@ -101,7 +101,7 @@ cifar10 = Game(env_name='Classify_cifar10',
 L = [list(range(1, cifar10.input_size)),\
      list(range(0, cifar10.output_size))]
 label = [item for sublist in L for item in sublist]
-classify = cifar10._replace(in_out_labels=label)
+cifar10 = cifar10._replace(in_out_labels=label)
 games['cifar10'] = cifar10
 
 # -- Cart-pole Swingup --------------------------------------------------- -- #
