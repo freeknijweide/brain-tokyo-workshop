@@ -89,7 +89,7 @@ cifar10 = Game(env_name='Classify_cifar10',
   output_size=10,
   time_factor=0,
   layers=[128,9],
-  i_act=np.full(64,1),
+  i_act=np.full(32*32*3,1),
   h_act=[1,3,4,5,6,7,8,9,10], # No step function
   o_act=np.full(10,1),
   weightCap = 2.0,
