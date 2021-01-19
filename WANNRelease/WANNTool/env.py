@@ -31,6 +31,18 @@ def make_env(env_name, seed=-1, render_mode=False):
     else:
       trainSet, target  = mnist_256()
       env = ClassifyEnv(trainSet, target)
+  elif (env_name.startswith("CIFAR10")):
+    print("CIFAR10_started")
+    from custom_envs.classify_gym import ClassifyEnv, cifar10, cifar10test
+    if env_name.startswith("CIFAR10TEST"):
+      test_images, test_labels  = cifar10test()
+      env = ClassifyEnv(test_images, test_labels, batch_size=10000, accuracy_mode=True)
+    elif env_name.startswith("CIFAR10TRAIN"):
+      train_images, train_labels  = cifar10()
+      env = ClassifyEnv(train_images, train_labels, batch_size=60000, accuracy_mode=True)
+    else:
+      trainSet, target  = cifar10()
+      env = ClassifyEnv(trainSet, target)
   if (seed >= 0):
     env.seed(seed)
   '''
