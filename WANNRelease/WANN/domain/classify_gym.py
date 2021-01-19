@@ -111,7 +111,7 @@ def cifar10():
   from tensorflow.keras.datasets.cifar10 import load_data
   (x_train, y_train), (x_test, y_test) = load_data()
   x_train = x_train.reshape(-1, (32*32*3))
-  return x_train/255, y_train/255
+  return x_train/255, y_train
 
 
 # def preprocess(img,size, patchCorner=(0,0), patchDim=None, unskew=True):
