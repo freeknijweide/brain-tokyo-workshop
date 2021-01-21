@@ -54,22 +54,16 @@ class ClassifyEnv(gym.Env):
     self.state = self.trainSet[self.currIndx,:]
     return self.state
 
-  def step(self, action, accuracy_mode=True):
+  def step(self, action):
     '''
     Judge Classification, increment to next batch
     action - [batch x output] - softmax output
     '''
     y = self.target[self.currIndx]
     m = y.shape[0]
-
-    if accuracy_mode:
-      p = np.argmax(action, axis=1)
-      accuracy = (float(np.sum(p==y)) / self.batch)
-      reward = accuracy
-    else:
-      log_likelihood = -np.log(action[range(m),y])
-      loss = np.sum(log_likelihood) / m
-      reward = -loss
+    log_likelihood = -np.log(np.nextafter(action[range(m),y],1))
+    loss = np.sum(log_likelihood) / m
+    reward = -loss
 
     if self.t_limit > 0: # We are doing batches
       reward *= (1/self.t_limit) # average
@@ -143,31 +137,31 @@ def cifar10():
 #
 #   return procImg
 
-def deskew(image, image_shape, negated=True):
-  """
-  This method deskwes an image using moments
-  :param image: a numpy nd array input image
-  :param image_shape: a tuple denoting the image`s shape
-  :param negated: a boolean flag telling whether the input image is negated
-
-  :returns: a numpy nd array deskewd image
-
-  source: https://github.com/vsvinayak/mnist-helper
-  """
-
-  # negate the image
-  if not negated:
-      image = 255-image
-  # calculate the moments of the image
-  m = cv2.moments(image)
-  if abs(m['mu02']) < 1e-2:
-      return image.copy()
-  # caclulating the skew
-  skew = m['mu11']/m['mu02']
-  M = np.float32([[1, skew, -0.5*image_shape[0]*skew], [0,1,0]])
-  img = cv2.warpAffine(image, M, image_shape, \
-    flags=cv2.WARP_INVERSE_MAP|cv2.INTER_LINEAR)
-  return img
+# def deskew(image, image_shape, negated=True):
+#   """
+#   This method deskwes an image using moments
+#   :param image: a numpy nd array input image
+#   :param image_shape: a tuple denoting the image`s shape
+#   :param negated: a boolean flag telling whether the input image is negated
+#
+#   :returns: a numpy nd array deskewd image
+#
+#   source: https://github.com/vsvinayak/mnist-helper
+#   """
+#
+#   # negate the image
+#   if not negated:
+#       image = 255-image
+#   # calculate the moments of the image
+#   m = cv2.moments(image)
+#   if abs(m['mu02']) < 1e-2:
+#       return image.copy()
+#   # caclulating the skew
+#   skew = m['mu11']/m['mu02']
+#   M = np.float32([[1, skew, -0.5*image_shape[0]*skew], [0,1,0]])
+#   img = cv2.warpAffine(image, M, image_shape, \
+#     flags=cv2.WARP_INVERSE_MAP|cv2.INTER_LINEAR)
+#   return img
 
 
 
