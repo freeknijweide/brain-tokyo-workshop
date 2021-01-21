@@ -11,7 +11,7 @@ np.set_printoptions(precision=2, linewidth=160)
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-
+print(f"RANK = {rank}")
 from wann_src import * # WANN evolution
 from domain import *   # Task environments
 
@@ -20,16 +20,20 @@ from domain import *   # Task environments
 def master(): 
   """Main WANN optimization script
   """
-  global fileName, hyp
+  global fileName, hyp, popdir
   data = DataGatherer(fileName, hyp)
-  wann = Wann(hyp)
+  print("gathered data")
+  print(hyp)
+  print('\n\n\n\n\n\n\n\n\n', popdir, '\n\n\n\n\n\n\n\n\n\n\n\n')
+  wann = Wann(hyp, initpop=popdir)
+  print("created wann")
 
   for gen in range(hyp['maxGen']):        
     pop = wann.ask()            # Get newly evolved individuals from WANN  
     reward = batchMpiEval(pop)  # Send pop to evaluate
     wann.tell(reward)           # Send fitness to WANN    
 
-    data = gatherData(data,wann,gen,hyp)
+    data = gatherData(data,wann,gen,hyp, savePop=True)
     print(gen, '\t - \t', data.display())
 
   # Clean up and data gathering at end of run
@@ -246,12 +250,13 @@ def main(argv):
   """Handles command line input, launches optimization or evaluation script
   depending on MPI rank.
   """
-  global fileName, hyp
+  global fileName, hyp, popdir
   fileName    = args.outPrefix
   hyp_default = args.default
   hyp_adjust  = args.hyperparam
 
   hyp = loadHyp(pFileName=hyp_default)
+  popdir = args.popdir
   updateHyp(hyp,hyp_adjust)
 
   # Launch main thread and workers
@@ -275,6 +280,9 @@ if __name__ == "__main__":
   
   parser.add_argument('-n', '--num_worker', type=int,\
    help='number of cores to use', default=8)
+
+  parser.add_argument('-u', '--popdir', type=str,\
+   help='source directory of previously trained population', default='')
 
   args = parser.parse_args()
 

@@ -57,10 +57,10 @@ class Ind():
     """
     return int(np.sum(self.conn[4,:]))
 
-  def express(self):
+  def express(self, safe=False):
     """Converts genes to weight matrix and activation vector
     """
-    order, wMat = getNodeOrder(self.node, self.conn)
+    order, wMat = getNodeOrder(self.node, self.conn, safe)
     if order is not False:
       self.wMat = wMat
       self.aVec = self.node[2,order]
@@ -77,7 +77,7 @@ class Ind():
 
 # -- ANN Ordering -------------------------------------------------------- -- #
 
-def getNodeOrder(nodeG,connG):
+def getNodeOrder(nodeG,connG, safe=False):
   """Builds connection matrix from genome through topological sorting.
 
   Args:
@@ -110,6 +110,7 @@ def getNodeOrder(nodeG,connG):
   """
   conn = np.copy(connG)
   node = np.copy(nodeG)
+  nNodes = np.shape(nodeG)[1]
   nIns = len(node[0,node[1,:] == 1]) + len(node[0,node[1,:] == 4])
   nOuts = len(node[0,node[1,:] == 2])
   
@@ -117,6 +118,12 @@ def getNodeOrder(nodeG,connG):
   conn[3,conn[4,:]==0] = np.nan # disabled but still connected
   src  = conn[1,:].astype(int)
   dest = conn[2,:].astype(int)
+
+  if safe:
+    wMat = np.zeros(nNodes, nNodes)
+    wMat[src,dest] = conn[3,:]
+    return wMat, True
+    
   
   lookup = node[0,:].astype(int)
   for i in range(len(lookup)): # Can we vectorize this?

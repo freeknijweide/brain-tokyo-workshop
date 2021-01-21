@@ -29,6 +29,13 @@ def make_env(env_name, seed=-1, render_mode=False):
     from domain.vae_racing import VAERacing
     env = VAERacing()
     
+  # -- GAN ----------------------------------------------------------- -- #
+  elif (env_name.startswith("gan_cifar")):
+    from domain.gan_cifar import GANEnv
+    env = GANEnv("domain/gan_discriminator.h5", 20)
+  elif (env_name.startswith("gan_mnist")):
+    from domain.gan_mnist import GANEnv
+    env = GANEnv("domain/gan_discriminator.h5", 20)
     
   # -- Classification ------------------------------------------------ -- #
   elif (env_name.startswith("Classify")):

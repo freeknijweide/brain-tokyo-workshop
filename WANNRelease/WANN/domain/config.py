@@ -80,6 +80,61 @@ mnist256 = mnist256._replace(in_out_labels=label)
 games['mnist256'] = mnist256
 
 
+# -- GANs ------------------------------------------------ -- #
+
+gan = Game(env_name='gan_cifar',
+  actionSelect='all', # all, soft, hard
+  input_size=20,
+  output_size=32*32*3,
+  time_factor=0,
+  layers=[128,9],
+  i_act=np.full(64,1),
+  h_act=[1,2,3,4,5,6,7,8,9,10], # No step function
+  o_act=np.full(10,1),
+  weightCap = 2.0,
+  noise_bias=0.0,
+  output_noise=[False, False, False],
+  max_episode_length = 0,
+  in_out_labels = []
+)
+ganL = [list(range(1, gan.input_size)),\
+     list(range(0, gan.output_size))]
+labelGan = [item for sublist in ganL for item in sublist]
+gan = gan._replace(in_out_labels=labelGan)
+games['gan_cifar'] = gan
+
+ganm = Game(env_name='gan_mnist',
+  actionSelect='all', # all, soft, hard
+  input_size=20,
+  output_size=28*28,
+  time_factor=0,
+  layers=[128,9],
+  i_act=np.full(64,1),
+  h_act=[1,2,3,4,5,6,7,8,9,10], # No step function
+  o_act=np.full(10,1),
+  weightCap = 2.0,
+  noise_bias=0.0,
+  output_noise=[False, False, False],
+  max_episode_length = 0,
+  in_out_labels = []
+)
+ganmL = [list(range(1, ganm.input_size)),\
+     list(range(0, ganm.output_size))]
+labelGanM = [item for sublist in ganmL for item in sublist]
+ganm = ganm._replace(in_out_labels=labelGanM)
+games['gan_mnist'] = ganm
+
+
+# > MNIST [16x16] data set
+mnist256 = classify._replace(\
+  env_name='Classify_mnist256', input_size=256, i_act=np.full(256,1))
+L = [list(range(1, mnist256.input_size)),\
+     list(range(0, mnist256.output_size))]
+label = [item for sublist in L for item in sublist]
+mnist256 = mnist256._replace(in_out_labels=label)
+games['mnist256'] = mnist256
+
+
 # -- Cart-pole Swingup --------------------------------------------------- -- #
 
 # > Slower reaction speed

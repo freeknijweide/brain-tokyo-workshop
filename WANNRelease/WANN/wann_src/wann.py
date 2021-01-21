@@ -12,11 +12,13 @@ from .task import Task
 
 from .ind import Ind
 
+class InvalidPopulationError(Exception):
+  pass
 
 class Wann():
   """WANN main class. Evolves population given fitness values of individuals.
   """
-  def __init__(self, hyp):
+  def __init__(self, hyp, initpop=None):
     """Intialize WANN algorithm with hyperparameters
     Args:
       hyp - (dict) - algorithm hyperparameters
@@ -39,6 +41,15 @@ class Wann():
     self.species = []  # Current species   
     self.innov = []    # Innovation number (gene Id)
     self.gen = 0
+    self.initpop = initpop
+
+#    if initpop is not None and not (initpop == ''):
+#        try:
+#            print('loading previous population:', initpop)
+#            self.loadPopulation(initpop)
+#        except InvalidPopulationError:
+#            self.initPop()
+
 
   ''' Subfunctions '''
   from ._variation import evolvePop, recombine, crossover,\
@@ -50,7 +61,16 @@ class Wann():
     """Returns newly evolved population
     """
     if len(self.pop) == 0:
-      self.initPop()      # Initialize population
+      if self.initpop is not None and not (self.initpop == ''):
+        try:
+          print('loading previous population:', self.initpop)
+          self.loadPopulation(self.initpop)
+        #  self.gen = 1000
+        except InvalidPopulationError:
+          self.initPop()
+      else:
+        self.initPop()
+
     else:
       self.probMoo()      # Rank population according to objectives
       self.speciate()     # Divide population into species
@@ -72,6 +92,45 @@ class Wann():
       self.pop[i].fitMax  = np.max( reward[i,:])
       self.pop[i].nConn   = self.pop[i].nConn
   
+
+  def loadPopulation(self, popdir):
+    """loads population from given directory. Allows warm restarts.
+    """
+    # Step 1: check for right number of individuals and no superfluous files.
+    import pickle
+    print('unpickling')
+    with open(popdir, 'rb') as fp:
+        pop = pickle.load(fp)
+#    from os import listdir
+    p = self.p
+#    individuals = listdir(popdir)
+#    num_inds = len(individuals)
+#    if num_inds < p['popSize']:
+#      raise InvalidPopulationError
+#    import re
+#    matches = [(re.match("ind_[0-9]+\.out", i) is None) for i in individuals]
+#    if any(matches):
+#      raise InvalidPopulationError
+#    from .ind import importNet
+#    pop = []
+#    from tqdm import tqdm
+#    for ind in tqdm(individuals[:p['popSize']]):
+#      wvec, avec, _ = importNet(f"{popdir}/{ind}")
+#      node, conn = getGenesFromNetwork(wvec, avec, p['ann_nInput'], p['ann_nOutput'])
+#
+#      newInd = Ind(conn, node)
+#      newInd.express(safe=True)
+#      newInd.birth = 0
+#      pop.append(copy.deepcopy(newInd))  
+    # - Create Innovation Record -
+    innov = np.zeros([5,pop[0].conn.shape[1]])
+    innov[0:3,:] = pop[0].conn[0:3,:]
+    innov[3,:] = -1
+    
+    self.pop = pop[:p['popSize']]
+    self.innov = innov
+
+
 
   def initPop(self):
     """Initialize population with a list of random individuals
@@ -122,6 +181,7 @@ class Wann():
     
     self.pop = pop
     self.innov = innov
+
 
 
   def probMoo(self):
@@ -191,3 +251,39 @@ def updateHyp(hyp,pFileName=None):
     hyp['ann_initAct']  = task.activations[0]
     hyp['ann_actRange'] = task.actRange
 
+
+def getGenesFromNetwork(wvec, avec, nIn, nOut):
+  nNodes = len(avec)
+
+  wMat = np.reshape(wvec, (nNodes, nNodes))
+
+  nHidden = nNodes - nIn - 1 - nOut
+  connsInOther = (1 + nIn) * nOut
+  nConn = (wvec > 0).sum()
+  connsHidden = nConn - connsInOther
+
+
+  node = np.zeros((3, nNodes))
+  node[0, :] = np.arange(nNodes)
+  node[1, 0] = 4 # bias
+  node[1, 1:nIn + 1] = 1
+  node[1, nIn+1 : -nOut] = 3
+  node[1, -nOut :] = 2
+
+  node[2, :] = avec
+
+  conn = np.zeros((5, nConn))
+  conn[0, :] = np.arange(nConn)
+  
+  x, y = np.where(wMat > 0)
+  conn[1, :] = x
+  conn[2, :] = y
+  conn[4, :] = wMat[x, y].reshape(-1)
+#  for xx, yy, i in zip(x,y,np.arange(nIn+1,nConn - nOut)):
+#    conn[1, i] = xx
+#    conn[2, i] = yy
+#    conn[4, i] = wMat[xx, yy]
+  
+  conn[3, :] = 1
+
+  return node, conn
