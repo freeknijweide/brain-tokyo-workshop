@@ -319,7 +319,7 @@ def selectAct(action, actSelect):
                          [N X 1]
   """    
   if actSelect == 'softmax':
-    action = softmax(action)
+    action = softmax(action,1)
   else:
     action = action.flatten()
   return action
