@@ -15,7 +15,7 @@ def viewInd(ind, taskName):
   else:
     wMat = ind.wMat
     aVec = np.zeros((np.shape(wMat)[0]))  
-  print('# of Connections in ANN: ', np.sum(wMat!=0))
+  print('# of Connections in ANN: ', np.sum(np.nan_to_num(wMat)!=0))
     
   # Create Graph
   nIn = env.input_size+1 # bias
