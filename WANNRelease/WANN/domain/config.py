@@ -80,6 +80,7 @@ mnist256 = mnist256._replace(in_out_labels=label)
 games['mnist256'] = mnist256
 
 
+<<<<<<< HEAD
 # -- GANs ------------------------------------------------ -- #
 
 gan = Game(env_name='gan_cifar',
@@ -90,6 +91,19 @@ gan = Game(env_name='gan_cifar',
   layers=[128,9],
   i_act=np.full(64,1),
   h_act=[1,2,3,4,5,6,7,8,9,10], # No step function
+=======
+# Cifar classifictaion
+
+# > Scikit learn digits data set
+cifar10 = Game(env_name='Classify_cifar10',
+  actionSelect='softmax', # all, soft, hard
+  input_size=32*32*3,
+  output_size=10,
+  time_factor=0,
+  layers=[128,9],
+  i_act=np.full(32*32*3,1),
+  h_act=[1,3,4,5,6,7,8,9,10], # No step function
+>>>>>>> a43e7ccac725d171d6c10b5d46bec9f0fb04a2e3
   o_act=np.full(10,1),
   weightCap = 2.0,
   noise_bias=0.0,
@@ -97,6 +111,7 @@ gan = Game(env_name='gan_cifar',
   max_episode_length = 0,
   in_out_labels = []
 )
+<<<<<<< HEAD
 ganL = [list(range(1, gan.input_size)),\
      list(range(0, gan.output_size))]
 labelGan = [item for sublist in ganL for item in sublist]
@@ -134,6 +149,13 @@ label = [item for sublist in L for item in sublist]
 mnist256 = mnist256._replace(in_out_labels=label)
 games['mnist256'] = mnist256
 
+=======
+L = [list(range(1, cifar10.input_size)),\
+     list(range(0, cifar10.output_size))]
+label = [item for sublist in L for item in sublist]
+cifar10 = cifar10._replace(in_out_labels=label)
+games['cifar10'] = cifar10
+>>>>>>> a43e7ccac725d171d6c10b5d46bec9f0fb04a2e3
 
 # -- Cart-pole Swingup --------------------------------------------------- -- #
 

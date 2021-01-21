@@ -2,4 +2,4 @@ WANNRelease/WANN/log/*
 **/*.out
 **/*.zip
 **/*.array
-
+**.out
