@@ -1,0 +1,9 @@
+{
+    "task":"cifar10",
+    "alg_nMean": 8,
+    "alg_nReps": 1,
+    "maxGen": 10000000000,
+    "popSize": 100,
+    "prob_initEnable": 0.001,
+    "select_tournSize": 15
+}

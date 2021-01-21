@@ -68,3 +68,21 @@ mnist256train = Game(env_name='MNISTTRAIN256-v0',
   weight_bias=0.0,
 )
 games['mnist256train'] = mnist256train
+
+cifar10 = Game(env_name='CIFAR10',
+  input_size=32*32*3,
+  output_size=10,
+  wann_file='cifar10.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cifar10'] = cifar10
+
+cifar10test = Game(env_name='CIFAR10TEST',
+  input_size=32*32*3,
+  output_size=10,
+  wann_file='cifar10.out',
+  action_select='softmax', # all, soft, hard
+  weight_bias=0.0,
+)
+games['cifar10test'] = cifar10test
