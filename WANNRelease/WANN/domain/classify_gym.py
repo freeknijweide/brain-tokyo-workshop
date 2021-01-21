@@ -54,16 +54,22 @@ class ClassifyEnv(gym.Env):
     self.state = self.trainSet[self.currIndx,:]
     return self.state
 
-  def step(self, action):
+  def step(self, action, accuracy_mode=True):
     '''
     Judge Classification, increment to next batch
     action - [batch x output] - softmax output
     '''
     y = self.target[self.currIndx]
     m = y.shape[0]
-    log_likelihood = -np.log(np.nextafter(action[range(m),y],1))
-    loss = np.sum(log_likelihood) / m
-    reward = -loss
+
+    if accuracy_mode:
+      p = np.argmax(action, axis=1)
+      accuracy = (float(np.sum(p==y)) / self.batch)
+      reward = accuracy
+    else:
+      log_likelihood = -np.log(action[range(m),y])
+      loss = np.sum(log_likelihood) / m
+      reward = -loss
 
     if self.t_limit > 0: # We are doing batches
       reward *= (1/self.t_limit) # average
