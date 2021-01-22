@@ -3,3 +3,5 @@ WANNRelease/WANN/log/*
 **/*.zip
 **/*.array
 **.out
+WANNRelease/WANN/domain/*.h5
+
