@@ -2,6 +2,6 @@ WANNRelease/WANN/log/*
 **/*.out
 **/*.zip
 **/*.array
-**.out
-WANNRelease/WANN/domain/*.h5
+**/*.h5
+
 
