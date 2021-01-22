@@ -1,8 +1,10 @@
-# Brain Tokyo Workshop 🧠🗼
+# L46 Project Code
 
-This repo contains research materials released by members of the Google Brain team in Tokyo.
+This repo contains code based on research materials released by members of the Google Brain team in Tokyo.
+The aim of this project is to see if WANNs can be extended to other use cases such as CIFAR10 classifcation and GANs. We also went through all the source code in an attempt to gain a deeper understanding of the relevant materials.
+Practically all of the changes we made are in the WANNRelease/WANN, as the other materials are not that relevant to our project.
 
-## Past Projects ##
+## Original project ##
 
 ### Weight Agnostic Neural Networks ###
 
@@ -14,29 +16,6 @@ This repo contains research materials released by members of the Google Brain te
 
 [Link to Article](https://weightagnostic.github.io/) ([pdf version](https://arxiv.org/abs/1906.04358))
 
-### Learning to Predict Without Looking Ahead: World Models Without Forward Prediction ###
-
-<p align="left">
-  <img width="50%" src="learntopredict/assets/learntopredict.gif"></img>
-</p>
-
-[Code Release](https://github.com/google/brain-tokyo-workshop/tree/master/learntopredict)
-
-[Link to Article](https://learningtopredict.github.io/) ([pdf version](https://arxiv.org/abs/1910.13038))
-
-### Neuroevolution of Self-Interpretable Agents ###
-
-<img width="50%" src="https://storage.googleapis.com/quickdraw-models/sketchRNN/attention/assets/card/attentionagent.gif"></img>
-
-[Code Release](https://github.com/google/brain-tokyo-workshop/tree/master/AttentionAgent)
-([Code for CarRacing Variants](https://github.com/google/brain-tokyo-workshop/tree/master/CarRacingExtension))
-
-<img width="50%" src="https://storage.googleapis.com/quickdraw-models/sketchRNN/attention/assets/card/CarRacingExt2SmallSize.gif"></img>
-
-
-*[Extensions](https://github.com/google/brain-tokyo-workshop/tree/master/CarRacingExtension) to CarRacing-v0 environment released to facilitate future research.*
-
-[Link to Article](https://attentionagent.github.io/) ([pdf version](https://arxiv.org/abs/2003.08165))
 
 ## Disclaimer
 
